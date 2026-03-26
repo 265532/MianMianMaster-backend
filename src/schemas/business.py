@@ -38,6 +38,8 @@ class InterviewConfig(InterviewConfigBase):
         from_attributes = True
 
 class AIStrategyBase(BaseModel):
+    model_config = {'protected_namespaces': ()}
+    
     name: str
     model_name: str
     temperature: float = Field(default=0.7, ge=0.0, le=2.0)

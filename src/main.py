@@ -1,7 +1,14 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from src.core.config import settings
-from src.core.exceptions import global_exception_handler, business_exception_handler, BusinessException
+from src.core.exceptions import (
+    global_exception_handler, 
+    business_exception_handler, 
+    http_exception_handler,
+    validation_exception_handler,
+    BusinessException
+)
 from src.api.router import api_router
 from src.db.database import Base, engine
 import time
@@ -25,6 +32,8 @@ app.add_middleware(
 
 app.add_exception_handler(Exception, global_exception_handler)
 app.add_exception_handler(BusinessException, business_exception_handler)
+app.add_exception_handler(HTTPException, http_exception_handler)
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
@@ -38,7 +47,10 @@ app.include_router(api_router, prefix=settings.API_V1_STR)
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok"}
+    return {
+        "code":200,
+        "status": "ok"
+    }
 
 if __name__ == "__main__":
     import uvicorn

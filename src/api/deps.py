@@ -1,15 +1,17 @@
-from typing import Generator
+from typing import Generator, List, Callable
+import json
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from src.core.config import settings
-from src.core.security import pwd_context
+from src.core.exceptions import BusinessException
 from src.db.database import get_db
-from src.models.user import User
+from src.db.redis_client import get_redis
+from src.models.user import User, Role, Permission
 from src.schemas.user import TokenData
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/swagger-login")
 
 def get_current_user(
     db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)
@@ -29,7 +31,7 @@ def get_current_user(
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = db.query(User).filter(User.username == token_data.username).first()
+    user = db.query(User).options(selectinload(User.roles)).filter(User.username == token_data.username).first()
     if user is None:
         raise credentials_exception
     return user
@@ -40,3 +42,42 @@ def get_current_active_user(
     if not current_user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
+
+def get_role_permissions(db: Session, role: Role) -> List[Permission]:
+    permissions = list(role.permissions)
+    if role.parent_id:
+        parent = db.query(Role).options(selectinload(Role.permissions)).filter(Role.id == role.parent_id).first()
+        if parent:
+            permissions.extend(get_role_permissions(db, parent))
+    return permissions
+
+def check_permissions(resource: str, action: str) -> Callable:
+    def permission_checker(
+        current_user: User = Depends(get_current_active_user),
+        db: Session = Depends(get_db)
+    ):
+        redis_client = get_redis()
+        cache_key = f"user:perms:{current_user.id}"
+        
+        cached_perms = redis_client.get(cache_key)
+        if cached_perms:
+            perms = json.loads(cached_perms)
+        else:
+            perms = []
+            for role in current_user.roles:
+                # Need to load role with permissions
+                full_role = db.query(Role).options(selectinload(Role.permissions)).filter(Role.id == role.id).first()
+                role_perms = get_role_permissions(db, full_role)
+                for p in role_perms:
+                    perms.append(f"{p.resource}:{p.action}")
+            
+            perms = list(set(perms))
+            redis_client.setex(cache_key, 3600, json.dumps(perms)) # Cache for 1 hour
+            
+        required_perm = f"{resource}:{action}"
+        if required_perm not in perms and "all:all" not in perms and current_user.username != "admin":
+            raise HTTPException(status_code=403, detail="Not enough permissions")
+            
+        return current_user
+        
+    return permission_checker
