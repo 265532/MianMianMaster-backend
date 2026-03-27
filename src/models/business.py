@@ -1,21 +1,44 @@
-from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, ForeignKey, Float, JSON
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, ForeignKey, Float, JSON, Table
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.sql import func
 from src.db.database import Base
 
+job_skills = Table(
+    "job_skills",
+    Base.metadata,
+    Column("job_position_id", Integer, ForeignKey("job_positions.id", ondelete="CASCADE"), primary_key=True),
+    Column("knowledge_graph_id", Integer, ForeignKey("knowledge_graphs.id", ondelete="CASCADE"), primary_key=True),
+    Column("weight", Float, default=1.0) # 权重，用于匹配度计算
+)
+
 class KnowledgeGraph(Base):
-    """知识图谱节点"""
+    """知识图谱节点（技能树）"""
     __tablename__ = "knowledge_graphs"
 
     id = Column(Integer, primary_key=True, index=True)
     concept_name = Column(String, index=True, nullable=False)
     description = Column(Text)
-    parent_id = Column(Integer, ForeignKey("knowledge_graphs.id"), nullable=True)
+    parent_id = Column(Integer, ForeignKey("knowledge_graphs.id", ondelete="SET NULL"), nullable=True)
     tags = Column(JSON, default=[])
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
-    children = relationship("KnowledgeGraph", backref="parent", remote_side=[id])
+    children = relationship("KnowledgeGraph", backref=backref("parent", remote_side=[id]))
+    job_positions = relationship("JobPosition", secondary=job_skills, back_populates="required_skills")
+
+class JobPosition(Base):
+    """岗位模型"""
+    __tablename__ = "job_positions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, index=True, nullable=False)
+    description = Column(Text)
+    level = Column(String) # junior, mid, senior
+    industry = Column(String)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+    required_skills = relationship("KnowledgeGraph", secondary=job_skills, back_populates="job_positions")
 
 class InterviewConfig(Base):
     """音视频面试配置"""

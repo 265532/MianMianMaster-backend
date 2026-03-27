@@ -35,6 +35,23 @@ class Role(RoleBase):
 
     model_config = {"from_attributes": True}
 
+class UserProfileBase(BaseModel):
+    avatar_url: Optional[str] = None
+    education: Optional[str] = None
+    target_position: Optional[str] = None
+    work_years: Optional[int] = None
+
+class UserProfileUpdate(UserProfileBase):
+    pass
+
+class UserProfile(UserProfileBase):
+    id: int
+    user_id: int
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
+
 class UserBase(BaseModel):
     username: str
     email: EmailStr
@@ -50,6 +67,7 @@ class User(UserBase):
     created_at: datetime
     updated_at: datetime
     roles: List[Role] = []
+    profile: Optional[UserProfile] = None
 
     model_config = {"from_attributes": True}
 
@@ -84,3 +102,11 @@ class PasswordResetRequest(BaseModel):
 
 class PasswordResetTokenRequest(BaseModel):
     email: EmailStr
+
+class ChangePasswordRequest(BaseModel):
+    old_password: str
+    new_password: str
+
+class ChangePhoneRequest(BaseModel):
+    new_phone: str
+    code: str

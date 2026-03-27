@@ -80,6 +80,102 @@ CREATE TABLE IF NOT EXISTS sms_verifications (
 ALTER TABLE sms_verifications ADD COLUMN IF NOT EXISTS expires_at TIMESTAMP WITH TIME ZONE;
 ALTER TABLE sms_verifications ADD COLUMN IF NOT EXISTS is_used BOOLEAN DEFAULT FALSE;
 
+-- 用户详情表
+CREATE TABLE IF NOT EXISTS user_profiles (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE UNIQUE NOT NULL,
+    avatar_url VARCHAR(255),
+    education VARCHAR(100),
+    target_position VARCHAR(100),
+    work_years INTEGER,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 消息通知表
+CREATE TABLE IF NOT EXISTS notifications (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    content TEXT NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 知识图谱 (技能树)
+CREATE TABLE IF NOT EXISTS knowledge_graphs (
+    id SERIAL PRIMARY KEY,
+    concept_name VARCHAR(100) NOT NULL,
+    description TEXT,
+    parent_id INTEGER REFERENCES knowledge_graphs(id) ON DELETE SET NULL,
+    tags JSONB DEFAULT '[]',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 岗位表
+CREATE TABLE IF NOT EXISTS job_positions (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    description TEXT,
+    level VARCHAR(50),
+    industry VARCHAR(100),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 岗位与技能关联表
+CREATE TABLE IF NOT EXISTS job_skills (
+    job_position_id INTEGER REFERENCES job_positions(id) ON DELETE CASCADE,
+    knowledge_graph_id INTEGER REFERENCES knowledge_graphs(id) ON DELETE CASCADE,
+    weight DOUBLE PRECISION DEFAULT 1.0,
+    PRIMARY KEY (job_position_id, knowledge_graph_id)
+);
+
+-- 测评试卷
+CREATE TABLE IF NOT EXISTS assessments (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    description TEXT,
+    job_position_id INTEGER REFERENCES job_positions(id) ON DELETE SET NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 测评题目
+CREATE TABLE IF NOT EXISTS questions (
+    id SERIAL PRIMARY KEY,
+    assessment_id INTEGER REFERENCES assessments(id) ON DELETE CASCADE NOT NULL,
+    knowledge_graph_id INTEGER REFERENCES knowledge_graphs(id) ON DELETE SET NULL,
+    question_type VARCHAR(50) NOT NULL,
+    content TEXT NOT NULL,
+    options JSONB DEFAULT '[]',
+    correct_answer JSONB NOT NULL,
+    score_weight DOUBLE PRECISION DEFAULT 1.0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 用户测评记录
+CREATE TABLE IF NOT EXISTS user_assessment_records (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    assessment_id INTEGER REFERENCES assessments(id) ON DELETE CASCADE NOT NULL,
+    total_score DOUBLE PRECISION DEFAULT 0.0,
+    details JSONB DEFAULT '{}',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 用户技能掌握度
+CREATE TABLE IF NOT EXISTS user_skill_mastery (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    knowledge_graph_id INTEGER REFERENCES knowledge_graphs(id) ON DELETE CASCADE NOT NULL,
+    mastery_level DOUBLE PRECISION DEFAULT 0.0,
+    last_assessed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, knowledge_graph_id)
+);
+
 -- 3. 索引创建 (使用 IF NOT EXISTS 避免重复创建报错)
 CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
@@ -89,6 +185,8 @@ CREATE INDEX IF NOT EXISTS idx_roles_parent ON roles(parent_id);
 CREATE INDEX IF NOT EXISTS idx_permissions_name ON permissions(name);
 CREATE INDEX IF NOT EXISTS idx_permissions_resource ON permissions(resource);
 CREATE INDEX IF NOT EXISTS idx_sms_verifications_phone ON sms_verifications(phone);
+CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON notifications(user_id);
+CREATE INDEX IF NOT EXISTS idx_notifications_is_read ON notifications(is_read);
 
 -- 4. 初始数据插入
 

@@ -17,6 +17,20 @@ role_permissions = Table(
     Column("permission_id", Integer, ForeignKey("permissions.id", ondelete="CASCADE"), primary_key=True),
 )
 
+class UserProfile(Base):
+    __tablename__ = "user_profiles"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), unique=True, nullable=False)
+    avatar_url = Column(String, nullable=True)
+    education = Column(String, nullable=True)
+    target_position = Column(String, nullable=True)
+    work_years = Column(Integer, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    
+    user = relationship("User", back_populates="profile")
+
 class User(Base):
     __tablename__ = "users"
 
@@ -30,6 +44,7 @@ class User(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     
     roles = relationship("Role", secondary=user_roles, back_populates="users")
+    profile = relationship("UserProfile", back_populates="user", uselist=False, cascade="all, delete-orphan")
 
 class Role(Base):
     __tablename__ = "roles"

@@ -31,12 +31,21 @@ async def http_exception_handler(request: Request, exc: HTTPException):
     )
 
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    errors = exc.errors()
+    # Serialize errors to make sure they are JSON serializable
+    serializable_errors = []
+    for error in errors:
+        err = dict(error)
+        if 'input' in err and isinstance(err['input'], bytes):
+            err['input'] = err['input'].decode('utf-8', errors='replace')
+        serializable_errors.append(err)
+        
     return JSONResponse(
         status_code=200,
         content={
             "code": 422,
             "message": "Validation Error",
-            "data": exc.errors()
+            "data": serializable_errors
         }
     )
 
