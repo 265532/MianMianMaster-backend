@@ -1,3 +1,7 @@
+---
+alwaysApply: false
+description: 项目总览规约
+---
 # 项目后台管理模块开发规约 v1.0
 
 ## 1. 项目概述
@@ -13,29 +17,26 @@
 
 ```
 backend-admin/
-├── app/
+├── src/                 # 源代码根目录
 │   ├── api/                 # API路由层
 │   │   ├── deps.py          # 公共依赖项（如数据库会话、当前用户）
 │   │   └── v1/              # API版本v1
-│   │       ├── endpoints/   # 各业务模块路由
-│   │       └── __init__.py
-│   ├── core/                # 核心配置、安全、事件处理
+│   │       ├── __init__.py
+│   ├── core/                # 核心配置、安全、异常处理
 │   │   ├── config.py        # 配置管理（pydantic-settings）
 │   │   ├── security.py      # JWT、密码哈希、权限校验
-│   │   └── exceptions.py    # 全局异常定义
+│   │   └── exceptions.py    # 全局业务异常定义
 │   ├── models/              # SQLAlchemy ORM模型
-│   ├── schemas/             # Pydantic模型（请求/响应）
-│   ├── services/            # 业务逻辑层
-│   ├── repositories/        # 数据访问层（与数据库交互）
-│   ├── tasks/               # 后台任务（Celery / BackgroundTasks）
-│   ├── utils/               # 工具函数、第三方服务封装
+│   ├── schemas/             # Pydantic模型（请求/响应结构）
+│   ├── services/            # 业务逻辑层 (Router将请求转发至此)
+│   ├── db/                  # 数据库与缓存客户端连接
+│   │   ├── database.py      # SQLAlchemy 同步引擎配置
+│   │   └── redis_client.py  # 同步 Redis 客户端
 │   └── main.py              # FastAPI应用入口
 ├── tests/                   # 单元测试、集成测试
 ├── alembic/                 # 数据库迁移脚本
-├── scripts/                 # 运维脚本、数据初始化
 ├── .env.example             # 环境变量模板
 ├── requirements.txt         # 生产依赖
-├── dev-requirements.txt     # 开发依赖
 └── README.md
 ```
 
@@ -73,26 +74,26 @@ backend-admin/
 
 ### 5.1 路由层
 
-- 每个模块的路由应组织在 `endpoints/` 下，使用 `APIRouter`
-- 路由函数仅负责参数解析、调用 service、返回响应，不编写业务逻辑
-- 使用 `deps.py` 中定义的公共依赖项（如 `get_db`、`get_current_user`）
+- 每个模块的路由应组织在 `v1/` 下，使用 `APIRouter`
+- 路由函数仅负责参数解析、依赖注入（如鉴权和数据库会话）、调用 service、返回响应，禁止在 Router 层编写复杂业务逻辑或直接操作数据库（`db.query` / `db.add`）
+- 使用 `deps.py` 中定义的公共依赖项（如 `get_db`、`check_permissions`）
 
 ```python
 # 示例
-@router.get("/{user_id}", response_model=UserResponse)
+@router.get("/{user_id}", response_model=ResponseModel[UserResponse], dependencies=[Depends(check_permissions("user", "read"))])
 def get_user(
     user_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
 ) -> Any:
-    return user_service.get_user_by_id(db, user_id)
+    data = user_service.get_user_by_id(db, user_id)
+    return ResponseModel(data=data)
 ```
 
 ### 5.2 异常处理
 
-- 统一在 `core/exceptions.py` 中定义自定义异常
+- 统一在 `core/exceptions.py` 中定义自定义异常（如 `BusinessException`）
 - 使用全局异常处理器将异常映射为统一的 HTTP 响应格式
-- API 返回结构统一为：
+- API 返回结构统一使用 `src.schemas.system.ResponseModel`：
 
 ```json
 {
@@ -156,7 +157,7 @@ def get_user(
 
 ### 7.4 客户端封装
 
-- 使用 `redis.asyncio.Redis` 异步客户端，通过依赖注入提供给服务层
+- 使用同步的 `redis.Redis` 客户端（在 `src/db/redis_client.py` 中封装），通过依赖注入或直接获取单例提供给服务层
 
 ***
 
@@ -204,6 +205,7 @@ def get_user(
 
 - 生产环境强制 HTTPS
 - 使用 CORS 中间件限制可信来源
+- 密码加密强制使用 `bcrypt` 库，禁用 `passlib` 避免现代 bcrypt 版本的包装兼容错误。
 
 ***
 

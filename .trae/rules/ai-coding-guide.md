@@ -1,3 +1,7 @@
+---
+alwaysApply: false
+description: 项目开发、业务功能开发、调试、文档生成等规范文档
+---
 # MianMianMasterBackend - 面向 AI 的开发规约文档 (AI Coding Guidelines)
 
 本文档旨在为 AI 代码助手（如 Trae, Cursor, GitHub Copilot 等）提供明确的开发规范与上下文指南。在本项目（**MianMianMasterBackend**）中生成或修改代码时，请**严格遵守**以下规约。
@@ -6,12 +10,12 @@
 
 - **项目名称**: MianMianMasterBackend
 - **框架**: FastAPI (Python 3.10+)
-- **数据库**: PostgreSQL
-- **ORM**: SQLAlchemy (1.4/2.0 混合语法风格，当前基于 `Column`, `Integer` 等定义)
+- **数据库**: PostgreSQL (同步驱动 psycopg2)
+- **ORM**: SQLAlchemy (2.0 同步风格语法 `db.query`)
 - **数据库迁移**: Alembic
-- **缓存**: Redis
+- **缓存**: Redis (同步客户端 `redis.Redis`)
 - **数据验证**: Pydantic v2
-- **认证**: JWT (基于 `python-jose` 和 `passlib[bcrypt]`)
+- **认证**: JWT (基于 `python-jose` 和 `bcrypt`，禁用 `passlib`)
 
 ## 2. 目录结构规范
 
@@ -20,12 +24,13 @@
 ```text
 src/
 ├── api/          # 路由与API端点 (按版本划分，如 v1)
-│   ├── deps.py   # FastAPI 依赖注入 (数据库 Session, 当前用户等)
+│   ├── deps.py   # FastAPI 依赖注入 (数据库 Session, 当前用户, 权限校验等)
 │   └── v1/       # v1 版本路由 (如 auth.py, business.py)
 ├── core/         # 核心配置与工具 (Config, Security, Exceptions)
-├── db/           # 数据库连接与 Redis 客户端初始化
+├── db/           # 数据库连接与 Redis 客户端初始化 (同步)
 ├── models/       # SQLAlchemy 数据库模型 (ORM)
 ├── schemas/      # Pydantic 验证模型 (Request/Response)
+├── services/     # 核心业务逻辑与数据库操作层
 └── main.py       # FastAPI 应用入口
 alembic/          # 数据库迁移脚本
 tests/            # 测试用例
@@ -64,10 +69,11 @@ tests/            # 测试用例
 ## 6. 路由与 API 规范 (api)
 
 1. **RESTful 风格**: 遵循标准 HTTP 动词 (`GET`, `POST`, `PUT`, `DELETE`)，路径使用名词复数，小写短横线分隔（如 `/api/v1/interview-configs`）。
-2. **依赖注入**:
+2. **统一响应**: 所有接口必须使用 `src.schemas.system.ResponseModel` 进行返回值封装，确保外层结构为 `{"code": 200, "message": "success", "data": ...}`。
+3. **依赖注入与鉴权**:
    - 必须通过 `Depends(get_db)` 获取数据库 Session。
-   - 必须通过 `Depends(get_current_active_user)` 进行权限拦截。
-3. **业务逻辑**: Controller 层（Router）应保持轻量，复杂的业务逻辑应抽取到 Service 层或专门的工具函数中。
+   - 所有的管理端业务接口必须通过 `Depends(check_permissions("resource", "action"))` 进行 RBAC 权限拦截。
+4. **严格分层 (Router -> Service -> DB)**: Router 层**禁止**直接操作数据库（禁止写 `db.query()`, `db.add()` 等）。Router 仅负责参数解析、鉴权、依赖注入和响应封装，所有实际的业务逻辑和数据库操作必须下沉至 `src/services/` 层。
 
 ## 7. 错误处理与异常规范
 
@@ -85,4 +91,5 @@ tests/            # 测试用例
 - **环境兼容性**: 当增加新依赖时，请确保使用 `pip install` 并在 `requirements.txt` 中固定版本号（格式 `package==x.y.z`）。
 - **代码完整性**: 返回的代码片段必须是完整的，不可使用 `// ... existing code ...` 等省略号，除非上下文明确支持替换块操作。
 - **注释与文档**: 为复杂的业务逻辑和公开的 API 端点添加 Docstring 注释。
+- **模块交接文档 (Mandatory)**: 每次完成特定业务模块的开发、重构或 Debug 之后，**必须**在 `doc/` 目录下（或该模块专属的子目录中，如 `doc/auth/`、`doc/business/`）生成或更新一份该模块的**交接文档**（如 `handover.md`）。文档内容需包含：当前模块的核心实现思路、未解决的问题（Todo）、关键的依赖关系、以及下一步的开发建议。这有助于后续 AI 会话快速恢复上下文。
 

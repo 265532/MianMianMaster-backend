@@ -14,16 +14,19 @@
 
 ## 3. 核心功能实现
 ### 3.1 密码加密与安全
-- **加密算法**: 使用 `passlib` 的 `bcrypt` 算法进行密码哈希处理。
+- **加密算法**: 使用标准的 `bcrypt` 算法进行密码哈希处理。
 - **密码强度验证**: 在注册和重置密码时，强制要求密码至少包含8个字符，且必须包含大写字母、小写字母、数字和特殊字符。
 - **密码重置令牌**: 使用基于 `jose` 的 JWT 生成有效期15分钟的重置令牌，确保重置流程安全。
 
-### 3.2 手机验证码功能
+### 3.2 接口兼容性
+- **Swagger登录兼容**: 默认的 `/api/v1/auth/login` 接口被设计为接收 JSON 格式 (`application/json`) 数据。为兼容 FastAPI 内置的 Swagger UI "Authorize" 按钮，单独提供了 `/api/v1/auth/swagger-login` 接口接收表单数据。
+
+### 3.3 手机验证码功能
 - **验证码发送**: 实现了发送接口 `/api/v1/auth/sms/send`，结合 Redis 缓存实现了 60 秒防刷机制。
 - **验证码登录**: 实现了 `/api/v1/auth/sms/login`，验证码为 6 位数字，有效期 5 分钟，验证成功即失效，并返回 JWT 访问令牌。
 - **手机号验证**: 使用 Pydantic 的 `field_validator` 支持中国大陆手机号正则验证。
 
-### 3.3 角色鉴权（RBAC）业务
+### 3.4 角色鉴权（RBAC）业务
 - **角色继承**: 获取权限时支持自动递归加载父角色权限（见 `src/api/deps.py` 中的 `get_role_permissions`）。
 - **权限拦截**: 使用依赖注入方式 `@router.get(..., dependencies=[Depends(check_permissions("resource", "action"))])` 实现方法级别权限控制。
 - **权限缓存**: 权限验证时通过 Redis 缓存用户的权限列表，过期时间 1 小时，角色/权限更新时自动清除缓存，支持动态权限加载。
