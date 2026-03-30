@@ -88,8 +88,22 @@ CREATE TABLE IF NOT EXISTS user_profiles (
     education VARCHAR(100),
     target_position VARCHAR(100),
     work_years INTEGER,
+    experience_points INTEGER DEFAULT 0,
+    level INTEGER DEFAULT 1,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 用户日常任务表
+CREATE TABLE IF NOT EXISTS user_daily_tasks (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    task_type VARCHAR(50) NOT NULL,
+    task_date DATE NOT NULL,
+    is_completed BOOLEAN DEFAULT FALSE,
+    reward_points INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, task_type, task_date)
 );
 
 -- 消息通知表
@@ -178,6 +192,126 @@ CREATE TABLE IF NOT EXISTS user_skill_mastery (
 
 -- 3. 索引创建 (使用 IF NOT EXISTS 避免重复创建报错)
 CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+
+-- 课程表
+CREATE TABLE IF NOT EXISTS courses (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    level VARCHAR(50),
+    cover_url VARCHAR(255),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 课程资料表
+CREATE TABLE IF NOT EXISTS course_materials (
+    id SERIAL PRIMARY KEY,
+    course_id INTEGER REFERENCES courses(id) ON DELETE CASCADE NOT NULL,
+    knowledge_graph_id INTEGER REFERENCES knowledge_graphs(id) ON DELETE SET NULL,
+    title VARCHAR(255) NOT NULL,
+    material_type VARCHAR(50) NOT NULL,
+    url VARCHAR(255) NOT NULL,
+    duration INTEGER DEFAULT 0,
+    order_num INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 用户学习进度表
+CREATE TABLE IF NOT EXISTS user_learning_progress (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    course_id INTEGER REFERENCES courses(id) ON DELETE CASCADE NOT NULL,
+    material_id INTEGER REFERENCES course_materials(id) ON DELETE CASCADE NOT NULL,
+    progress_percent DOUBLE PRECISION DEFAULT 0.0,
+    is_completed BOOLEAN DEFAULT FALSE,
+    last_accessed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 用户题目收藏夹
+CREATE TABLE IF NOT EXISTS user_question_collections (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    question_id INTEGER REFERENCES questions(id) ON DELETE CASCADE NOT NULL,
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 用户错题本
+CREATE TABLE IF NOT EXISTS user_wrong_questions (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    question_id INTEGER REFERENCES questions(id) ON DELETE CASCADE NOT NULL,
+    wrong_answer JSONB,
+    answer_count INTEGER DEFAULT 1,
+    is_mastered BOOLEAN DEFAULT FALSE,
+    last_answered_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 徽章表
+CREATE TABLE IF NOT EXISTS badges (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) UNIQUE NOT NULL,
+    description TEXT,
+    icon_url VARCHAR(255),
+    condition_type VARCHAR(50) NOT NULL,
+    condition_value VARCHAR(100),
+    ai_prompt_override TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 用户徽章关联表
+CREATE TABLE IF NOT EXISTS user_badges (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    badge_id INTEGER REFERENCES badges(id) ON DELETE CASCADE NOT NULL,
+    tx_hash VARCHAR(255),
+    awarded_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 帖子表
+CREATE TABLE IF NOT EXISTS posts (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    status VARCHAR(50) DEFAULT 'published',
+    ai_analysis_status VARCHAR(50) DEFAULT 'pending',
+    ai_review_content TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 评论表
+CREATE TABLE IF NOT EXISTS comments (
+    id SERIAL PRIMARY KEY,
+    post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE NOT NULL,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    parent_id INTEGER REFERENCES comments(id) ON DELETE CASCADE,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 帖子点赞表
+CREATE TABLE IF NOT EXISTS post_likes (
+    id SERIAL PRIMARY KEY,
+    post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE NOT NULL,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(post_id, user_id)
+);
+
+-- 用户关注表
+CREATE TABLE IF NOT EXISTS user_follows (
+    id SERIAL PRIMARY KEY,
+    follower_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    followed_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(follower_id, followed_id)
+);
+
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_phone ON users(phone);
 CREATE INDEX IF NOT EXISTS idx_roles_name ON roles(name);
@@ -199,7 +333,18 @@ INSERT INTO permissions (name, description, resource, action) VALUES
 ('role:read', '查看角色', 'role', 'read'),
 ('role:create', '创建角色', 'role', 'create'),
 ('role:update', '更新角色', 'role', 'update'),
-('role:delete', '删除角色', 'role', 'delete')
+('role:delete', '删除角色', 'role', 'delete'),
+('knowledge_graph:read', '查看知识图谱', 'knowledge_graph', 'read'),
+('knowledge_graph:create', '创建知识图谱', 'knowledge_graph', 'create'),
+('knowledge_graph:update', '更新知识图谱', 'knowledge_graph', 'update'),
+('knowledge_graph:delete', '删除知识图谱', 'knowledge_graph', 'delete'),
+('ai_strategy:read', '查看AI策略', 'ai_strategy', 'read'),
+('ai_strategy:create', '创建AI策略', 'ai_strategy', 'create'),
+('interview_config:read', '查看面试配置', 'interview_config', 'read'),
+('interview_config:create', '创建面试配置', 'interview_config', 'create'),
+('interview_session:read', '查看面试会话', 'interview_session', 'read'),
+('interview_session:create', '创建面试会话', 'interview_session', 'create'),
+('agent_state:read', '查看Agent状态', 'agent_state', 'read')
 ON CONFLICT (name) DO NOTHING;
 
 -- 插入默认管理员角色

@@ -30,13 +30,18 @@
 
 ### 1.3 游戏化与徽章系统 (Gamification)
 - **模型设计**：
-  - `Badge` (徽章定义，包含触发条件 `condition_type` 和 `condition_value`)
+  - `Badge` (徽章定义，包含触发条件 `condition_type` 和 `condition_value`，以及为 LLM 预留的 `ai_prompt_override`)
   - `UserBadge` (用户徽章关联，预留 `tx_hash` 供后续区块链存证扩展)
+  - `UserDailyTask` (用户日常任务表，位于 `gamification.py`)
+  - `UserProfile` (新增 `experience_points` 经验值和 `level` 等级字段)
 - **API 接口**：
   - `POST /api/v1/learning/badges` - 创建徽章定义
   - `GET /api/v1/learning/badges` - 获取徽章列表
   - `POST /api/v1/learning/badges/award/{badge_id}` - 为用户颁发徽章
   - `GET /api/v1/learning/my-badges` - 获取当前用户的徽章
+- **Service Hook**：
+  - 学习进度 100% 完成时，自动颁发 `course_completed` 类型的徽章，并增加经验值。
+  - 测评得分 > 80 分时，自动颁发 `score_reached` 类型的徽章，并增加经验值。
 
 ---
 
@@ -44,7 +49,6 @@
 
 - 刷题与随机抽题的复合业务逻辑（如根据岗位/知识图谱动态生成练习卷）目前尚未在 `learning` API 中完全实现，未来可结合 `assessment` 模块进行完善。
 - 课程与资料的上传暂未对接 OSS/MinIO 存储，目前 URL 为字符串直存，需要后续在后台管理中实现上传逻辑。
-- 徽章系统的自动触发逻辑（例如在 `update_progress` 到 100% 时自动检查并发放徽章）还需在 Service 层中加入钩子或异步任务。
 - 区块链上链存证逻辑目前仅在 `UserBadge` 模型中预留了 `tx_hash` 字段，需在后续扩展。
 
 ---

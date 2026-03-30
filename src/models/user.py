@@ -26,6 +26,8 @@ class UserProfile(Base):
     education = Column(String, nullable=True)
     target_position = Column(String, nullable=True)
     work_years = Column(Integer, nullable=True)
+    experience_points = Column(Integer, default=0) # 经验值
+    level = Column(Integer, default=1) # 等级
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     

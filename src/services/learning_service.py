@@ -25,6 +25,14 @@ class LearningService:
     def add_material_to_course(self, db: Session, material_in: schemas.CourseMaterialCreate) -> CourseMaterial:
         # Check course exists
         self.get_course(db, material_in.course_id)
+        
+        # Check knowledge_graph_id if provided
+        if material_in.knowledge_graph_id:
+            from src.models.business import KnowledgeGraph
+            kg = db.query(KnowledgeGraph).filter(KnowledgeGraph.id == material_in.knowledge_graph_id).first()
+            if not kg:
+                raise BusinessException(code=404, detail="Knowledge graph not found")
+                
         db_material = CourseMaterial(**material_in.model_dump())
         db.add(db_material)
         db.commit()
@@ -50,6 +58,33 @@ class LearningService:
                 is_completed=progress_in.is_completed
             )
             db.add(progress)
+        
+        db.flush() # flush to get updated states
+        
+        # Check if course is fully completed
+        materials_count = db.query(CourseMaterial).filter(CourseMaterial.course_id == course_id).count()
+        completed_count = db.query(UserLearningProgress).filter(
+            UserLearningProgress.user_id == user_id,
+            UserLearningProgress.course_id == course_id,
+            UserLearningProgress.is_completed == True
+        ).count()
+        
+        if materials_count > 0 and materials_count == completed_count:
+            # Trigger Gamification Hook: Course completed
+            badge = db.query(Badge).filter(
+                Badge.condition_type == 'course_completed',
+                Badge.condition_value == str(course_id)
+            ).first()
+            if badge:
+                self.award_badge(db, user_id, badge.id)
+                
+            # Add experience points
+            from src.models.user import UserProfile
+            profile = db.query(UserProfile).filter(UserProfile.user_id == user_id).first()
+            if profile:
+                profile.experience_points += 50
+                if profile.experience_points >= profile.level * 100:
+                    profile.level += 1
         
         db.commit()
         db.refresh(progress)

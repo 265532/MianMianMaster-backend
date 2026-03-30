@@ -71,6 +71,13 @@ class User(UserBase):
 
     model_config = {"from_attributes": True}
 
+    @field_validator("phone", mode="after")
+    @classmethod
+    def mask_phone(cls, v: Optional[str]) -> Optional[str]:
+        if v and len(v) == 11:
+            return f"{v[:3]}****{v[7:]}"
+        return v
+
 class Token(BaseModel):
     access_token: str
     token_type: str

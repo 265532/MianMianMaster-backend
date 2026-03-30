@@ -1,12 +1,26 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from typing import List, Optional, Any
 from datetime import datetime
+from enum import Enum
 
 # ================= Course =================
+class MaterialType(str, Enum):
+    video = "video"
+    pdf = "pdf"
+    article = "article"
+
 class CourseMaterialBase(BaseModel):
     title: str
-    material_type: str = Field(..., description="video, pdf, article")
+    material_type: MaterialType = Field(..., description="video, pdf, article")
     url: str
+    
+    @field_validator("url")
+    @classmethod
+    def validate_url(cls, v: str) -> str:
+        v = v.strip()
+        v = v.strip('`')
+        return v
+
     duration: Optional[int] = 0
     order_num: Optional[int] = 0
     knowledge_graph_id: Optional[int] = None

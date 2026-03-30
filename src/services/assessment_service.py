@@ -109,6 +109,27 @@ def submit_assessment(db: Session, user_id: int, request: AssessmentSubmitReques
                 )
                 db.add(mastery)
                 
+    # Trigger Gamification Hook: Assessment score > 80
+    max_possible_score = sum([q.score_weight for q in questions])
+    if max_possible_score > 0 and (total_score / max_possible_score) >= 0.8:
+        from src.models.learning import Badge, UserBadge
+        badge = db.query(Badge).filter(
+            Badge.condition_type == 'score_reached',
+            Badge.condition_value == str(request.assessment_id)
+        ).first()
+        if badge:
+            existing = db.query(UserBadge).filter(UserBadge.user_id == user_id, UserBadge.badge_id == badge.id).first()
+            if not existing:
+                db.add(UserBadge(user_id=user_id, badge_id=badge.id))
+                
+                # Add experience points
+                from src.models.user import UserProfile
+                profile = db.query(UserProfile).filter(UserProfile.user_id == user_id).first()
+                if profile:
+                    profile.experience_points += 100
+                    if profile.experience_points >= profile.level * 100:
+                        profile.level += 1
+
     db.commit()
     db.refresh(record)
     return record

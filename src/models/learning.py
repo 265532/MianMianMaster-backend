@@ -82,6 +82,7 @@ class Badge(Base):
     icon_url = Column(String)
     condition_type = Column(String, nullable=False) # 达成条件类型，例如 'course_completed', 'score_reached'
     condition_value = Column(String) # 条件值，例如课程 ID 或 分数阈值
+    ai_prompt_override = Column(Text) # 为未来游戏通关式面试预留的人设覆盖
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 

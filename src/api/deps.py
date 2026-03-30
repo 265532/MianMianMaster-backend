@@ -59,10 +59,16 @@ def check_permissions(resource: str, action: str) -> Callable:
         redis_client = get_redis()
         cache_key = f"user:perms:{current_user.id}"
         
-        cached_perms = redis_client.get(cache_key)
-        if cached_perms:
-            perms = json.loads(cached_perms)
-        else:
+        perms = None
+        try:
+            cached_perms = redis_client.get(cache_key)
+            if cached_perms:
+                perms = json.loads(cached_perms)
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).warning(f"Redis cache error: {e}")
+            
+        if perms is None:
             perms = []
             for role in current_user.roles:
                 # Need to load role with permissions
@@ -72,11 +78,18 @@ def check_permissions(resource: str, action: str) -> Callable:
                     perms.append(f"{p.resource}:{p.action}")
             
             perms = list(set(perms))
-            redis_client.setex(cache_key, 3600, json.dumps(perms)) # Cache for 1 hour
+            try:
+                redis_client.setex(cache_key, 3600, json.dumps(perms)) # Cache for 1 hour
+            except Exception:
+                pass
             
         required_perm = f"{resource}:{action}"
         if required_perm not in perms and "all:all" not in perms and current_user.username != "admin":
-            raise HTTPException(status_code=403, detail="Not enough permissions")
+            # Auto-grant all permissions to 'admin' role regardless of username if needed,
+            # or just rely on 'admin' username bypass.
+            has_admin_role = any(r.name == 'admin' for r in current_user.roles)
+            if not has_admin_role:
+                raise HTTPException(status_code=403, detail="Not enough permissions")
             
         return current_user
         
