@@ -17,7 +17,7 @@
 ```text
 MianMianMaster-backend/
 ├── .trae/rules/         # IDE / AI 代码助手的系统提示词与开发约束
-├── doc/                 # 项目内部开发规约、交接文档与知识库
+├── docs/                 # 项目内部开发规约、交接文档与知识库
 ├── src/                 # 核心业务源代码
 │   ├── api/             # API 路由层 (Endpoints, Deps)
 │   ├── core/            # 核心配置与全局异常、安全工具
@@ -32,10 +32,10 @@ MianMianMaster-backend/
 ## 📖 开发规约与文档
 
 本项目有严格的开发规约，请所有开发者（及 AI 助手）在贡献代码前务必阅读：
-👉 **[点击查看文档导航中心](./doc/README.md)**
+👉 **[点击查看文档导航中心](./docs/README.md)**
 
 特别是：
-- [AI 开发规约合订版](./doc/ai-development-specification.md)（最高准则）
+- [AI 开发规约合订版](./docs/ai-development-specification.md)（最高准则）
 
 ## 🚀 快速启动
 

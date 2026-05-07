@@ -15,7 +15,7 @@
   - [x] 创建 `UserProfile` 相关的 schemas, service, 和 router。
   - [x] 实现用户信息的查询与修改接口。
   - [x] 实现手机绑定/修改、密码修改等账号安全接口。
-- **文档输出**：`doc/user/user_system_handover.md`（更新）
+- **文档输出**：`docs/user/user_system_handover.md`（更新）
 
 ### 2. 消息通知系统 (Notification)
 - **目标**：实现需求文档中“设置 -> 消息通知”。
@@ -43,7 +43,7 @@
   - [x] 设计 `UserAssessmentRecord`（用户测评记录）和 `UserSkillMastery`（用户技能掌握度）模型。
   - [x] 开发测评提交接口：接收用户的答卷，计算各维度得分。
   - [x] 开发岗位匹配度计算逻辑：根据用户的 `UserSkillMastery` 和目标 `JobPosition` 的技能要求，计算匹配百分比。
-- **文档输出**：`doc/assessment/assessment_handover.md`（新建）
+- **文档输出**：`docs/assessment/assessment_handover.md`（新建）
 
 ---
 
@@ -109,5 +109,5 @@
 
 ## AI Coding 规范提醒
 - 每次开始新的功能开发前，请 AI 查阅本规划文档以明确当前所处阶段。
-- 开发过程中严格遵守 `doc/ai-development-specification.md`（如 `Router -> Service -> DB` 分层）。
-- 开发完成后，**务必**在对应的 `doc/[module_name]/handover.md` 中更新进度，并将本规划中对应的任务标记为完成（`[x]`）。
+- 开发过程中严格遵守 `docs/ai-development-specification.md`（如 `Router -> Service -> DB` 分层）。
+- 开发完成后，**务必**在对应的 `docs/[module_name]/handover.md` 中更新进度，并将本规划中对应的任务标记为完成（`[x]`）。

@@ -4,7 +4,7 @@
 在完成基础用户系统（RBAC、JWT、短信登录等）之后，根据项目需求分析文档的“阶段一”目标，对用户体系进行了进一步深化，主要新增了“个人中心扩展信息（UserProfile）”与“消息通知系统（Notification）”，以及相关账号安全设置。
 
 ## 2. 数据库更新设计
-更新了数据库初始化脚本 `doc/database/init.sql`，主要新增两张核心表：
+更新了数据库初始化脚本 `docs/database/init.sql`，主要新增两张核心表：
 - `user_profiles`: 存储用户扩展信息（头像 `avatar_url`、学历 `education`、目标岗位 `target_position`、工作年限 `work_years`），与 `users` 表形成 1-to-1 的关联（通过 `user_id` 唯一约束及级联删除）。
 - `notifications`: 消息通知表，用于存储系统下发给用户的通知（标题、内容、类型 `type`、已读状态 `is_read`），通过 `user_id` 与用户表关联。
 

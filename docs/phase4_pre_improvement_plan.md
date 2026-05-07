@@ -42,11 +42,11 @@
 
 **【改进计划】**：
 - **Schema 严格对齐**：
-  - 以 `src/models` 下的 SQLAlchemy 2.0 模型为基准（SSOT），审计并修复 `doc/database/init.sql` 中的遗漏字段（如 `permissions` 表的 `updated_at`、`resource` 等差异）。
+  - 以 `src/models` 下的 SQLAlchemy 2.0 模型为基准（SSOT），审计并修复 `docs/database/init.sql` 中的遗漏字段（如 `permissions` 表的 `updated_at`、`resource` 等差异）。
   - 核对所有外键的 `ondelete="CASCADE"` 约束，防止脏数据残留。
 - **文档状态刷新**：
-  - 更新 `doc/ai_coding_plan.md`，将阶段五的社区模块标记为“提前至阶段四前”并更新 Todo。
-  - 完善各个模块的 `handover.md`（如 `doc/learning/handover.md`），清理不再适用的过时记录。
+  - 更新 `docs/ai_coding_plan.md`，将阶段五的社区模块标记为“提前至阶段四前”并更新 Todo。
+  - 完善各个模块的 `handover.md`（如 `docs/learning/handover.md`），清理不再适用的过时记录。
 
 ### 2.4 性能、安全与合规性 (Performance, Security & Compliance)
 **【现状分析】**：系统目前采用 bcrypt 密码哈希和 JWT 机制，且实现了基于 Redis 的 RBAC 缓存。但在 API 接口防刷、响应数据脱敏及 ORM 查询性能（N+1 问题）上仍有欠缺。
