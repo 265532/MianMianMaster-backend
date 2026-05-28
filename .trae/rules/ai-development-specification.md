@@ -1,6 +1,9 @@
+---
+alwaysApply: true
+---
 # AI 开发规约合订版
 
-> 本文档为 MianMianMasterBackend 项目面向 AI 代码助手（Trae、Cursor、GitHub Copilot 等）的统一开发规约。如有冲突，以此文件为准。
+> 本文档为 MianMianMasterBackend 后端 项目面向 AI 代码助手（Trae、Cursor、GitHub Copilot 等）的统一开发规约。如有冲突，以此文件为准。
 
 ## 1. 架构约束
 

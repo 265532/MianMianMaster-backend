@@ -1,6 +1,6 @@
 ---
 alwaysApply: false
-description: debug之后,将调试过程中的关键发现、解决方案、踩坑记录及最佳实践整理为结构化Markdown技术文档，并保存至项目根目录下的doc/debug/子目录中。
+description: debug之后,将调试过程中的关键发现、解决方案、踩坑记录及最佳实践整理为结构化Markdown技术文档，并保存至项目根目录下的docs/debug/子目录中。
 ---
 
 # 调试文档生成器

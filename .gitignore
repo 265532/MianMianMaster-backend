@@ -35,6 +35,7 @@ htmlcov/
 *.swo
 *~
 .DS_Store
+.arts/
 
 # Jupyter Notebook
 .ipynb_checkpoints/
