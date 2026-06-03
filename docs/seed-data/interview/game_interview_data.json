@@ -1,0 +1,201 @@
+{
+  "stats": [
+    {
+      "label": "已完成关卡",
+      "value": "5"
+    },
+    {
+      "label": "总答题数",
+      "value": "128"
+    },
+    {
+      "label": "正确率",
+      "value": "85%"
+    },
+    {
+      "label": "技能认证",
+      "value": "8"
+    },
+    {
+      "label": "连续打卡",
+      "value": "12天"
+    },
+    {
+      "label": "总得分",
+      "value": "2,850"
+    }
+  ],
+  "levels": [
+    {
+      "id": 1,
+      "name": "基础入门",
+      "difficulty": "easy",
+      "progress": 100,
+      "completed": true,
+      "questions": 20,
+      "correct": 18,
+      "time_spent": "2h 30m",
+      "badge": "bronze",
+      "skills": [
+        "HTML/CSS",
+        "JavaScript基础",
+        "网络基础"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "前端进阶",
+      "difficulty": "medium",
+      "progress": 100,
+      "completed": true,
+      "questions": 30,
+      "correct": 25,
+      "time_spent": "4h 15m",
+      "badge": "silver",
+      "skills": [
+        "Vue3",
+        "React",
+        "TypeScript"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "后端基础",
+      "difficulty": "medium",
+      "progress": 100,
+      "completed": true,
+      "questions": 25,
+      "correct": 22,
+      "time_spent": "3h 45m",
+      "badge": "silver",
+      "skills": [
+        "Java基础",
+        "Spring Boot",
+        "SQL"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "系统设计",
+      "difficulty": "hard",
+      "progress": 100,
+      "completed": true,
+      "questions": 20,
+      "correct": 16,
+      "time_spent": "5h 20m",
+      "badge": "gold",
+      "skills": [
+        "分布式系统",
+        "微服务",
+        "缓存设计"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "高级算法",
+      "difficulty": "hard",
+      "progress": 60,
+      "completed": false,
+      "questions": 33,
+      "correct": 20,
+      "time_spent": "3h 10m",
+      "badge": null,
+      "skills": [
+        "动态规划",
+        "图算法",
+        "贪心算法"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "架构实战",
+      "difficulty": "expert",
+      "progress": 0,
+      "completed": false,
+      "questions": 0,
+      "correct": 0,
+      "time_spent": "0h 0m",
+      "badge": null,
+      "skills": [
+        "高可用架构",
+        "性能优化",
+        "DevOps"
+      ]
+    }
+  ],
+  "achievements": [
+    {
+      "id": 1,
+      "name": "初次尝试",
+      "description": "完成第一次游戏式面试",
+      "icon": "sparkles",
+      "unlocked": true,
+      "unlocked_at": "2026-03-01"
+    },
+    {
+      "id": 2,
+      "name": "连续打卡",
+      "description": "连续10天进行面试练习",
+      "icon": "calendar",
+      "unlocked": true,
+      "unlocked_at": "2026-03-12"
+    },
+    {
+      "id": 3,
+      "name": "正确率达人",
+      "description": "单次关卡正确率达到90%以上",
+      "icon": "check-circle",
+      "unlocked": true,
+      "unlocked_at": "2026-03-18"
+    },
+    {
+      "id": 4,
+      "name": "挑战大师",
+      "description": "完成所有困难级别关卡",
+      "icon": "trophy",
+      "unlocked": false,
+      "progress": 75
+    },
+    {
+      "id": 5,
+      "name": "知识渊博",
+      "description": "完成所有技能类别的题目",
+      "icon": "book-open",
+      "unlocked": false,
+      "progress": 60
+    }
+  ],
+  "leaderboard": [
+    {
+      "rank": 1,
+      "name": "张三",
+      "score": 3250,
+      "avatar": "👨‍💻"
+    },
+    {
+      "rank": 2,
+      "name": "李四",
+      "score": 3120,
+      "avatar": "👩‍💻"
+    },
+    {
+      "rank": 3,
+      "name": "王五",
+      "score": 2980,
+      "avatar": "👨‍💻"
+    },
+    {
+      "rank": 4,
+      "name": "赵六",
+      "score": 2950,
+      "avatar": "👩‍💻"
+    },
+    {
+      "rank": 5,
+      "name": "王同学",
+      "score": 2850,
+      "avatar": "🧑‍💻",
+      "is_current_user": true
+    }
+  ]
+}

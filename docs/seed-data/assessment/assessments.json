@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "title": "前端开发能力测评",
+    "type": "technical",
+    "created_at": "2026-05-09T00:00:00Z"
+  },
+  {
+    "id": 2,
+    "title": "逻辑思维测评",
+    "type": "logic",
+    "created_at": "2026-05-08T00:00:00Z"
+  },
+  {
+    "id": 3,
+    "title": "表达能力测评",
+    "type": "communication",
+    "created_at": "2026-05-07T00:00:00Z"
+  }
+]

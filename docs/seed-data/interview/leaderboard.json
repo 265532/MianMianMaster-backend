@@ -1,0 +1,33 @@
+[
+  {
+    "rank": 1,
+    "name": "张三",
+    "score": 3250,
+    "avatar": "👨‍💻"
+  },
+  {
+    "rank": 2,
+    "name": "李四",
+    "score": 3120,
+    "avatar": "👩‍💻"
+  },
+  {
+    "rank": 3,
+    "name": "王五",
+    "score": 2980,
+    "avatar": "👨‍💻"
+  },
+  {
+    "rank": 4,
+    "name": "赵六",
+    "score": 2950,
+    "avatar": "👩‍💻"
+  },
+  {
+    "rank": 5,
+    "name": "王同学",
+    "score": 2850,
+    "avatar": "🧑‍💻",
+    "isCurrentUser": true
+  }
+]

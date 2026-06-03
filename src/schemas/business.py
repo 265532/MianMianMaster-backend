@@ -1,5 +1,5 @@
-from pydantic import BaseModel, Field
-from typing import Optional, List, Dict, Any
+from pydantic import BaseModel, Field, ConfigDict
+from typing import Optional, List, Dict, Any, ForwardRef
 from datetime import datetime
 
 class KnowledgeGraphBase(BaseModel):
@@ -15,9 +15,26 @@ class KnowledgeGraph(KnowledgeGraphBase):
     id: int
     created_at: datetime
     updated_at: datetime
+    children: List['KnowledgeGraph'] = []
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
+
+class JobPositionBase(BaseModel):
+    title: str
+    description: Optional[str] = None
+    level: Optional[str] = None
+    industry: Optional[str] = None
+
+class JobPositionCreate(JobPositionBase):
+    skill_ids: List[int] = []
+
+class JobPosition(JobPositionBase):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    required_skills: List[KnowledgeGraph] = []
+
+    model_config = ConfigDict(from_attributes=True)
 
 class InterviewConfigBase(BaseModel):
     name: str
@@ -34,8 +51,7 @@ class InterviewConfig(InterviewConfigBase):
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class AIStrategyBase(BaseModel):
     name: str
@@ -45,6 +61,8 @@ class AIStrategyBase(BaseModel):
     system_prompt: str
     is_active: bool = True
 
+    model_config = ConfigDict(protected_namespaces=())
+
 class AIStrategyCreate(AIStrategyBase):
     pass
 
@@ -53,8 +71,7 @@ class AIStrategy(AIStrategyBase):
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class AgentStateUpdate(BaseModel):
     status: str
@@ -67,8 +84,7 @@ class AgentState(AgentStateUpdate):
     agent_type: str
     last_heartbeat: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class InterviewSessionBase(BaseModel):
     candidate_id: int
@@ -87,5 +103,4 @@ class InterviewSession(InterviewSessionBase):
     end_time: Optional[datetime] = None
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

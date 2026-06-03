@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "title": "逻辑思维提升",
+    "description": "通过系统训练提升逻辑思维能力，掌握结构化思考方法，提高面试中的问题分析和解决能力。",
+    "category": "逻辑思维",
+    "difficulty": "easy",
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-05-09T00:00:00Z"
+  },
+  {
+    "id": 2,
+    "title": "表达结构优化",
+    "description": "学习STAR法则等表达技巧，掌握清晰、有条理的表达方法，提高面试中的沟通效果。",
+    "category": "表达结构",
+    "difficulty": "medium",
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-05-09T00:00:00Z"
+  },
+  {
+    "id": 3,
+    "title": "专业深度强化",
+    "description": "深入探讨技术领域的核心概念和前沿趋势，提升专业知识深度，应对技术面试中的 challenging questions。",
+    "category": "专业深度",
+    "difficulty": "hard",
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-05-09T00:00:00Z"
+  },
+  {
+    "id": 4,
+    "title": "面试技巧全攻略",
+    "description": "全面覆盖面试各个环节的技巧，包括简历准备、自我介绍、行为问题回答、薪资谈判等。",
+    "category": "面试技巧",
+    "difficulty": "easy",
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-05-09T00:00:00Z"
+  }
+]

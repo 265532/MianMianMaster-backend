@@ -1,6 +1,13 @@
 from pydantic import BaseModel
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, TypeVar, Generic
 from datetime import datetime
+
+T = TypeVar("T")
+
+class ResponseModel(BaseModel, Generic[T]):
+    code: int = 200
+    message: str = "success"
+    data: Optional[T] = None
 
 class SystemConfigBase(BaseModel):
     key: str
@@ -14,8 +21,7 @@ class SystemConfig(SystemConfigBase):
     id: int
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 class AuditLogBase(BaseModel):
     user_id: Optional[int] = None
@@ -31,5 +37,4 @@ class AuditLog(AuditLogBase):
     id: int
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}

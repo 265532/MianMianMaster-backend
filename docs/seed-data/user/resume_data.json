@@ -1,0 +1,73 @@
+{
+  "basic_info": {
+    "name": "王同学",
+    "major": "计算机专业",
+    "grade": "大三",
+    "school": "北京大学"
+  },
+  "education": [
+    {
+      "school": "北京大学",
+      "major": "计算机科学与技术",
+      "start_date": "2022-09",
+      "end_date": "2026-06",
+      "degree": "本科"
+    }
+  ],
+  "experience": [
+    {
+      "company": "字节跳动",
+      "position": "前端开发实习生",
+      "start_date": "2025-07",
+      "end_date": "2025-09",
+      "description": "参与公司内部管理系统的前端开发，使用Vue3 + TypeScript技术栈，负责页面组件的开发和优化。"
+    },
+    {
+      "company": "阿里巴巴",
+      "position": "前端开发实习生",
+      "start_date": "2024-07",
+      "end_date": "2024-09",
+      "description": "参与电商平台的前端开发，使用React + TypeScript技术栈，负责商品详情页的开发和性能优化。"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Vue3",
+      "level": "expert"
+    },
+    {
+      "name": "React",
+      "level": "advanced"
+    },
+    {
+      "name": "TypeScript",
+      "level": "advanced"
+    },
+    {
+      "name": "Java",
+      "level": "intermediate"
+    },
+    {
+      "name": "Python",
+      "level": "intermediate"
+    },
+    {
+      "name": "SQL",
+      "level": "intermediate"
+    }
+  ],
+  "projects": [
+    {
+      "name": "AI面试模拟平台",
+      "role": "前端开发",
+      "description": "使用Vue3 + TypeScript + Tailwind CSS开发的AI面试模拟平台，包含面试练习、能力评估、简历诊断等功能。",
+      "technologies": "Vue3, TypeScript, Tailwind CSS, ECharts"
+    },
+    {
+      "name": "在线学习平台",
+      "role": "全栈开发",
+      "description": "使用React + Node.js + MongoDB开发的在线学习平台，包含课程管理、用户管理、学习进度跟踪等功能。",
+      "technologies": "React, Node.js, MongoDB, Express"
+    }
+  ]
+}

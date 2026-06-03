@@ -1,12 +1,26 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from src.core.limiter import limiter
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 from src.core.config import settings
-from src.core.exceptions import global_exception_handler, business_exception_handler, BusinessException
+from src.core.exceptions import (
+    global_exception_handler, 
+    business_exception_handler, 
+    http_exception_handler,
+    validation_exception_handler,
+    BusinessException
+)
 from src.api.router import api_router
 from src.db.database import Base, engine
+from src.core.logger import setup_logging
 import time
 
-Base.metadata.create_all(bind=engine)
+setup_logging()
+
+if settings.ENVIRONMENT == "development":
+    Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -15,16 +29,21 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.cors_origins_list,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type"],
 )
 
 app.add_exception_handler(Exception, global_exception_handler)
 app.add_exception_handler(BusinessException, business_exception_handler)
+app.add_exception_handler(HTTPException, http_exception_handler)
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
@@ -38,8 +57,11 @@ app.include_router(api_router, prefix=settings.API_V1_STR)
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok"}
+    return {
+        "code":200,
+        "status": "ok"
+    }
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("src.main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("src.main:app", host="0.0.0.0", port=8081, reload=True)

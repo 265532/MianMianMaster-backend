@@ -1,0 +1,60 @@
+{
+  "1": {
+    "job_id": 1,
+    "match_score": 85,
+    "matched_skills": [
+      "Vue3",
+      "TypeScript",
+      "CSS3"
+    ],
+    "missing_skills": [
+      "Webpack",
+      "性能优化"
+    ]
+  },
+  "2": {
+    "job_id": 2,
+    "match_score": 65,
+    "matched_skills": [
+      "Java"
+    ],
+    "missing_skills": [
+      "Spring Boot",
+      "MySQL",
+      "微服务"
+    ]
+  },
+  "3": {
+    "job_id": 3,
+    "match_score": 70,
+    "matched_skills": [
+      "数据分析"
+    ],
+    "missing_skills": [
+      "产品规划",
+      "用户研究"
+    ]
+  },
+  "4": {
+    "job_id": 4,
+    "match_score": 55,
+    "matched_skills": [],
+    "missing_skills": [
+      "Figma",
+      "交互设计",
+      "视觉设计"
+    ]
+  },
+  "5": {
+    "job_id": 5,
+    "match_score": 60,
+    "matched_skills": [
+      "Python",
+      "SQL"
+    ],
+    "missing_skills": [
+      "数据可视化",
+      "机器学习"
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "name": "初次尝试",
+    "description": "完成第一次游戏式面试",
+    "icon_url": "sparkles",
+    "created_at": "2026-01-01T00:00:00Z"
+  },
+  {
+    "id": 2,
+    "name": "连续打卡",
+    "description": "连续10天进行面试练习",
+    "icon_url": "calendar",
+    "created_at": "2026-01-01T00:00:00Z"
+  },
+  {
+    "id": 3,
+    "name": "正确率达人",
+    "description": "单次关卡正确率达到90%以上",
+    "icon_url": "check-circle",
+    "created_at": "2026-01-01T00:00:00Z"
+  },
+  {
+    "id": 4,
+    "name": "挑战大师",
+    "description": "完成所有困难级别关卡",
+    "icon_url": "trophy",
+    "created_at": "2026-01-01T00:00:00Z"
+  },
+  {
+    "id": 5,
+    "name": "知识渊博",
+    "description": "完成所有技能类别的题目",
+    "icon_url": "book-open",
+    "created_at": "2026-01-01T00:00:00Z"
+  }
+]

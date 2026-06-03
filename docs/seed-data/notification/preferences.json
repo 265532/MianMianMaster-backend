@@ -1,0 +1,9 @@
+[
+  {
+    "email_notifications": true,
+    "push_notifications": true,
+    "interview_reminders": true,
+    "community_updates": false,
+    "learning_reminders": true
+  }
+]

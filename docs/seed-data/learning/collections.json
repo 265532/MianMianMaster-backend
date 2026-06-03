@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "title": "高频算法 50 题",
+    "description": "涵盖面试中常见的算法题，包括排序、查找、动态规划等",
+    "question_count": 24,
+    "category": "算法",
+    "difficulty": "medium",
+    "saved_at": "2026-03-20",
+    "last_practiced": "2026-03-25"
+  },
+  {
+    "id": 2,
+    "title": "前端框架高频题",
+    "description": "Vue、React、Angular 等前端框架的常见面试题",
+    "question_count": 32,
+    "category": "前端",
+    "difficulty": "medium",
+    "saved_at": "2026-03-15",
+    "last_practiced": "2026-03-22"
+  },
+  {
+    "id": 3,
+    "title": "系统设计基础",
+    "description": "分布式系统、微服务、缓存等系统设计相关问题",
+    "question_count": 18,
+    "category": "后端",
+    "difficulty": "hard",
+    "saved_at": "2026-03-10",
+    "last_practiced": "2026-03-18"
+  }
+]
