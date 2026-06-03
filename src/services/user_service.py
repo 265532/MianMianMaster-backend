@@ -1,8 +1,14 @@
 from sqlalchemy.orm import Session, selectinload
+from sqlalchemy import func
 from src.models.user import User, UserProfile, SmsVerification
-from src.schemas.user import UserProfileUpdate, ChangePasswordRequest, ChangePhoneRequest
+from src.models.business import InterviewSession
+from src.models.assessment import UserSkillMastery
+from src.models.gamification import UserDailyTask
+from src.models.business import KnowledgeGraph
+from src.schemas.user import UserProfileUpdate, ChangePasswordRequest, ChangePhoneRequest, InterviewHistoryItem, AbilityDataItem, GameInterviewData
 from src.core.security import verify_password, get_password_hash, validate_password_strength
 from src.core.exceptions import BusinessException
+from typing import List, Optional
 from datetime import datetime
 
 def get_user_profile(db: Session, user_id: int) -> User:
@@ -72,3 +78,58 @@ def change_phone(db: Session, user_id: int, request: ChangePhoneRequest) -> str:
     user.phone = request.new_phone
     db.commit()
     return "Phone number updated successfully."
+
+def get_interview_history(db: Session, user_id: int, skip: int = 0, limit: int = 10) -> List[InterviewSession]:
+    """获取用户面试历史"""
+    return db.query(InterviewSession).filter(
+        InterviewSession.candidate_id == user_id
+    ).order_by(InterviewSession.created_at.desc()).offset(skip).limit(limit).all()
+
+def get_ability_data(db: Session, user_id: int) -> List[dict]:
+    """获取用户能力数据（技能掌握度）"""
+    results = db.query(
+        UserSkillMastery,
+        KnowledgeGraph.concept_name
+    ).join(
+        KnowledgeGraph, UserSkillMastery.knowledge_graph_id == KnowledgeGraph.id
+    ).filter(
+        UserSkillMastery.user_id == user_id
+    ).all()
+
+    return [
+        {
+            "knowledge_graph_id": mastery.knowledge_graph_id,
+            "concept_name": concept_name,
+            "mastery_level": mastery.mastery_level,
+            "last_assessed_at": mastery.last_assessed_at
+        }
+        for mastery, concept_name in results
+    ]
+
+def get_game_interview_data(db: Session, user_id: int) -> GameInterviewData:
+    """获取用户游戏化面试数据"""
+    # 面试统计
+    interview_stats = db.query(
+        func.count(InterviewSession.id).label('total'),
+        func.count(InterviewSession.id).filter(InterviewSession.status == 'completed').label('completed'),
+        func.avg(InterviewSession.score).filter(InterviewSession.status == 'completed').label('avg_score')
+    ).filter(InterviewSession.candidate_id == user_id).first()
+
+    # 每日任务统计
+    task_stats = db.query(
+        func.count(UserDailyTask.id).filter(UserDailyTask.is_completed == True).label('completed_tasks'),
+        func.coalesce(func.sum(UserDailyTask.reward_points), 0).label('total_points')
+    ).filter(UserDailyTask.user_id == user_id).first()
+
+    # 用户等级
+    profile = db.query(UserProfile).filter(UserProfile.user_id == user_id).first()
+    level = profile.level if profile else 1
+
+    return GameInterviewData(
+        total_interviews=interview_stats.total or 0,
+        completed_interviews=interview_stats.completed or 0,
+        average_score=round(float(interview_stats.avg_score), 1) if interview_stats.avg_score else None,
+        total_tasks_completed=task_stats.completed_tasks or 0,
+        total_points=task_stats.total_points or 0,
+        level=level
+    )

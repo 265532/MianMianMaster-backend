@@ -1,0 +1,17 @@
+[
+  {
+    "key": "max_interview_sessions",
+    "value": "10",
+    "description": "用户最大同时进行面试会话数"
+  },
+  {
+    "key": "ai_review_enabled",
+    "value": "true",
+    "description": "是否启用 AI 评审功能"
+  },
+  {
+    "key": "daily_question_limit",
+    "value": "50",
+    "description": "每日刷题上限"
+  }
+]

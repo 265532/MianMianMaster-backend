@@ -1,0 +1,79 @@
+[
+  {
+    "id": 1,
+    "name": "前端开发",
+    "category": "技术",
+    "level": 1,
+    "children": [
+      {
+        "id": 11,
+        "name": "HTML/CSS",
+        "category": "基础",
+        "level": 2,
+        "children": [
+          {
+            "id": 111,
+            "name": "HTML5",
+            "level": 3
+          },
+          {
+            "id": 112,
+            "name": "CSS3",
+            "level": 3
+          },
+          {
+            "id": 113,
+            "name": "响应式设计",
+            "level": 3
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "name": "JavaScript",
+        "category": "核心",
+        "level": 2,
+        "children": [
+          {
+            "id": 121,
+            "name": "ES6+",
+            "level": 3
+          },
+          {
+            "id": 122,
+            "name": "TypeScript",
+            "level": 3
+          },
+          {
+            "id": 123,
+            "name": "异步编程",
+            "level": 3
+          }
+        ]
+      },
+      {
+        "id": 13,
+        "name": "框架",
+        "category": "应用",
+        "level": 2,
+        "children": [
+          {
+            "id": 131,
+            "name": "Vue3",
+            "level": 3
+          },
+          {
+            "id": 132,
+            "name": "React",
+            "level": 3
+          },
+          {
+            "id": 133,
+            "name": "Angular",
+            "level": 3
+          }
+        ]
+      }
+    ]
+  }
+]

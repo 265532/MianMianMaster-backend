@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "badge_id": 1,
+    "badge": {
+      "id": 1,
+      "name": "初次尝试",
+      "description": "完成第一次游戏式面试",
+      "icon_url": "sparkles",
+      "created_at": "2026-01-01T00:00:00Z"
+    },
+    "awarded_at": "2026-03-01T00:00:00Z"
+  },
+  {
+    "id": 2,
+    "badge_id": 2,
+    "badge": {
+      "id": 2,
+      "name": "连续打卡",
+      "description": "连续10天进行面试练习",
+      "icon_url": "calendar",
+      "created_at": "2026-01-01T00:00:00Z"
+    },
+    "awarded_at": "2026-03-12T00:00:00Z"
+  },
+  {
+    "id": 3,
+    "badge_id": 3,
+    "badge": {
+      "id": 3,
+      "name": "正确率达人",
+      "description": "单次关卡正确率达到90%以上",
+      "icon_url": "check-circle",
+      "created_at": "2026-01-01T00:00:00Z"
+    },
+    "awarded_at": "2026-03-18T00:00:00Z"
+  }
+]

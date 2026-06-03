@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "question": "在 Vue3 中，如何实现组件间的通信？",
+    "user_answer": "使用 props 和 events",
+    "correct_answer": "使用 props、events、provide/inject、pinia 等多种方式",
+    "explanation": "Vue3 提供了多种组件间通信方式，包括传统的 props 和 events，以及 provide/inject API，还有状态管理库如 pinia",
+    "category": "前端",
+    "difficulty": "medium",
+    "mistake_count": 2,
+    "last_mistake_at": "2026-03-24",
+    "status": "unreviewed"
+  },
+  {
+    "id": 2,
+    "question": "什么是闭包？",
+    "user_answer": "闭包是一个函数",
+    "correct_answer": "闭包是指有权访问另一个函数作用域中变量的函数",
+    "explanation": "闭包的核心特点是能够访问其词法作用域之外的变量，即使创建它的函数已经执行完毕",
+    "category": "JavaScript",
+    "difficulty": "medium",
+    "mistake_count": 1,
+    "last_mistake_at": "2026-03-20",
+    "status": "reviewed"
+  },
+  {
+    "id": 3,
+    "question": "如何优化 React 应用的性能？",
+    "user_answer": "使用 memo 和 useCallback",
+    "correct_answer": "使用 memo、useCallback、useMemo、虚拟列表、代码分割等多种方式",
+    "explanation": "React 性能优化是一个综合工程，需要从多个方面入手，包括组件渲染优化、状态管理优化、资源加载优化等",
+    "category": "前端",
+    "difficulty": "hard",
+    "mistake_count": 3,
+    "last_mistake_at": "2026-03-18",
+    "status": "unreviewed"
+  },
+  {
+    "id": 4,
+    "question": "什么是事件冒泡和事件捕获？",
+    "user_answer": "事件冒泡是从子元素向父元素传播，事件捕获是从父元素向子元素传播",
+    "correct_answer": "事件冒泡是从触发事件的元素开始，向上传播到根元素；事件捕获是从根元素开始，向下传播到触发事件的元素",
+    "explanation": "DOM 事件流包括三个阶段：事件捕获阶段、目标阶段和事件冒泡阶段",
+    "category": "JavaScript",
+    "difficulty": "easy",
+    "mistake_count": 1,
+    "last_mistake_at": "2026-03-15",
+    "status": "reviewed"
+  },
+  {
+    "id": 5,
+    "question": "如何实现一个深度克隆函数？",
+    "user_answer": "使用 JSON.parse(JSON.stringify(obj))",
+    "correct_answer": "JSON 方法有局限性，对于函数、Symbol、循环引用等无法正确处理，需要使用递归实现",
+    "explanation": "JSON 序列化方法无法处理函数、Symbol、undefined、循环引用等情况，需要使用递归并处理这些特殊情况",
+    "category": "JavaScript",
+    "difficulty": "medium",
+    "mistake_count": 2,
+    "last_mistake_at": "2026-03-12",
+    "status": "unreviewed"
+  }
+]

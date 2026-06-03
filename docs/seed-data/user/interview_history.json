@@ -1,0 +1,266 @@
+[
+  {
+    "id": 1,
+    "date": "2026-03-15",
+    "company": "字节跳动",
+    "position": "前端开发工程师",
+    "round": "二面",
+    "type": "技术面",
+    "score": 88,
+    "status": "passed",
+    "tags": [
+      "Vue3",
+      "TypeScript",
+      "算法"
+    ],
+    "feedback": "技术基础扎实，算法能力突出，表达清晰",
+    "details": {
+      "technical": 90,
+      "communication": 85,
+      "logic": 92,
+      "problem_solving": 88
+    }
+  },
+  {
+    "id": 2,
+    "date": "2026-02-28",
+    "company": "阿里巴巴",
+    "position": "Java 开发工程师",
+    "round": "一面",
+    "type": "技术面",
+    "score": 82,
+    "status": "passed",
+    "tags": [
+      "Java",
+      "Spring Boot",
+      "数据库"
+    ],
+    "feedback": "后端知识体系完整，项目经验丰富",
+    "details": {
+      "technical": 85,
+      "communication": 78,
+      "logic": 88,
+      "problem_solving": 82
+    }
+  },
+  {
+    "id": 3,
+    "date": "2025-11-15",
+    "company": "腾讯",
+    "position": "UI 设计师",
+    "round": "三面",
+    "type": "设计面",
+    "score": 91,
+    "status": "passed",
+    "tags": [
+      "UI/UX",
+      "Figma",
+      "交互设计"
+    ],
+    "feedback": "设计理念新颖，作品集质量高",
+    "details": {
+      "technical": 92,
+      "communication": 90,
+      "logic": 85,
+      "problem_solving": 88
+    }
+  },
+  {
+    "id": 4,
+    "date": "2025-10-20",
+    "company": "美团",
+    "position": "产品经理",
+    "round": "一面",
+    "type": "产品面",
+    "score": 78,
+    "status": "failed",
+    "tags": [
+      "产品设计",
+      "用户研究",
+      "数据分析"
+    ],
+    "feedback": "产品思维清晰，但行业理解深度不足",
+    "details": {
+      "technical": 75,
+      "communication": 82,
+      "logic": 78,
+      "problem_solving": 75
+    }
+  },
+  {
+    "id": 5,
+    "date": "2025-09-10",
+    "company": "百度",
+    "position": "数据分析师",
+    "round": "二面",
+    "type": "技术面",
+    "score": 85,
+    "status": "passed",
+    "tags": [
+      "数据分析",
+      "SQL",
+      "Python"
+    ],
+    "feedback": "数据处理能力强，分析思路清晰",
+    "details": {
+      "technical": 88,
+      "communication": 82,
+      "logic": 90,
+      "problem_solving": 85
+    }
+  },
+  {
+    "id": 6,
+    "date": "2025-08-05",
+    "company": "京东",
+    "position": "后端开发工程师",
+    "round": "一面",
+    "type": "技术面",
+    "score": 80,
+    "status": "passed",
+    "tags": [
+      "Java",
+      "微服务",
+      "分布式"
+    ],
+    "feedback": "后端技术掌握全面，编码能力强",
+    "details": {
+      "technical": 82,
+      "communication": 78,
+      "logic": 85,
+      "problem_solving": 80
+    }
+  },
+  {
+    "id": 7,
+    "date": "2025-06-20",
+    "company": "拼多多",
+    "position": "前端开发工程师",
+    "round": "三面",
+    "type": "技术面",
+    "score": 92,
+    "status": "passed",
+    "tags": [
+      "React",
+      "Node.js",
+      "性能优化"
+    ],
+    "feedback": "前端技术栈全面，性能优化经验丰富",
+    "details": {
+      "technical": 95,
+      "communication": 90,
+      "logic": 92,
+      "problem_solving": 90
+    }
+  },
+  {
+    "id": 8,
+    "date": "2025-05-15",
+    "company": "小米",
+    "position": "测试工程师",
+    "round": "一面",
+    "type": "技术面",
+    "score": 76,
+    "status": "failed",
+    "tags": [
+      "测试",
+      "自动化",
+      "质量保证"
+    ],
+    "feedback": "测试基础扎实，但自动化测试经验不足",
+    "details": {
+      "technical": 78,
+      "communication": 75,
+      "logic": 72,
+      "problem_solving": 76
+    }
+  },
+  {
+    "id": 9,
+    "date": "2025-04-10",
+    "company": "网易",
+    "position": "前端开发工程师",
+    "round": "二面",
+    "type": "技术面",
+    "score": 86,
+    "status": "passed",
+    "tags": [
+      "Vue3",
+      "Webpack",
+      "响应式设计"
+    ],
+    "feedback": "前端技术能力强，项目经验丰富",
+    "details": {
+      "technical": 88,
+      "communication": 85,
+      "logic": 86,
+      "problem_solving": 84
+    }
+  },
+  {
+    "id": 10,
+    "date": "2025-03-05",
+    "company": "新浪",
+    "position": "后端开发工程师",
+    "round": "一面",
+    "type": "技术面",
+    "score": 79,
+    "status": "passed",
+    "tags": [
+      "Java",
+      "Spring Cloud",
+      "缓存"
+    ],
+    "feedback": "后端技术掌握良好，有一定项目经验",
+    "details": {
+      "technical": 82,
+      "communication": 75,
+      "logic": 80,
+      "problem_solving": 78
+    }
+  },
+  {
+    "id": 11,
+    "date": "2024-12-20",
+    "company": "搜狐",
+    "position": "前端开发工程师",
+    "round": "一面",
+    "type": "技术面",
+    "score": 83,
+    "status": "passed",
+    "tags": [
+      "JavaScript",
+      "HTML/CSS",
+      "浏览器原理"
+    ],
+    "feedback": "前端基础扎实，学习能力强",
+    "details": {
+      "technical": 85,
+      "communication": 80,
+      "logic": 82,
+      "problem_solving": 83
+    }
+  },
+  {
+    "id": 12,
+    "date": "2024-11-10",
+    "company": "优酷",
+    "position": "产品经理",
+    "round": "二面",
+    "type": "产品面",
+    "score": 81,
+    "status": "failed",
+    "tags": [
+      "产品规划",
+      "用户体验",
+      "市场分析"
+    ],
+    "feedback": "产品思路清晰，但缺乏创新点",
+    "details": {
+      "technical": 78,
+      "communication": 85,
+      "logic": 80,
+      "problem_solving": 79
+    }
+  }
+]

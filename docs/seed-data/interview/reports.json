@@ -1,0 +1,28 @@
+[
+  {
+    "session_id": "session-001",
+    "status": "completed",
+    "overall_score": 85,
+    "dimensions": {
+      "technical": 88,
+      "communication": 82,
+      "logic": 85,
+      "problem_solving": 80
+    },
+    "strengths": [
+      "Vue 3 Composition API 理解深入",
+      "对前端性能优化有实际经验",
+      "代码组织能力较强"
+    ],
+    "weaknesses": [
+      "系统设计思维需要加强",
+      "对微前端架构了解不够深入"
+    ],
+    "suggestions": [
+      "建议学习系统设计方法论，如 CAP 理论、分布式系统设计",
+      "可以尝试实践微前端架构，了解 qiankun 或 Module Federation",
+      "多参与技术分享，提升表达能力"
+    ],
+    "generated_at": "2026-05-28T10:31:00Z"
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "id": 3,
+    "name": "面霸",
+    "avatar": "💻",
+    "posts": 128,
+    "followers": 520,
+    "bio": "专注于技术面试辅导，已帮助 100+ 人成功拿到大厂 offer"
+  },
+  {
+    "id": 5,
+    "name": "技术大牛",
+    "avatar": "🧠",
+    "posts": 96,
+    "followers": 480,
+    "bio": "资深后端工程师，擅长 Java、Spring 生态和系统设计"
+  },
+  {
+    "id": 7,
+    "name": "前端专家",
+    "avatar": "🎨",
+    "posts": 84,
+    "followers": 420,
+    "bio": "前端架构师，专注于 React、Vue 和性能优化"
+  },
+  {
+    "id": 6,
+    "name": "HR 视角",
+    "avatar": "👥",
+    "posts": 72,
+    "followers": 380,
+    "bio": "资深 HR，10 年招聘经验，专注于技术人才招聘"
+  }
+]

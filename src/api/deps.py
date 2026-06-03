@@ -65,11 +65,10 @@ def _is_super_admin(user: User) -> bool:
     return any(r.name == SUPER_ADMIN_ROLE for r in user.roles)
 
 def _get_user_permissions(db: Session, user: User) -> List[str]:
-    redis_client = get_redis()
-    cache_key = f"user:perms:{user.id}"
-
     perms = None
     try:
+        redis_client = get_redis()
+        cache_key = f"user:perms:{user.id}"
         cached_perms = redis_client.get(cache_key)
         if cached_perms:
             perms = json.loads(cached_perms)
@@ -87,6 +86,7 @@ def _get_user_permissions(db: Session, user: User) -> List[str]:
 
         perms = list(set(perms))
         try:
+            redis_client = get_redis()
             redis_client.setex(cache_key, 3600, json.dumps(perms))
         except Exception:
             pass

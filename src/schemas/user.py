@@ -122,3 +122,33 @@ class ChangePasswordRequest(BaseModel):
 class ChangePhoneRequest(BaseModel):
     new_phone: str
     code: str
+
+# 用户个人中心相关 Schema
+class InterviewHistoryItem(BaseModel):
+    id: int
+    status: str
+    score: Optional[float] = None
+    feedback: Optional[str] = None
+    start_time: Optional[datetime] = None
+    end_time: Optional[datetime] = None
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+class AbilityDataItem(BaseModel):
+    knowledge_graph_id: int
+    concept_name: str
+    mastery_level: float
+    last_assessed_at: Optional[datetime] = None
+
+    model_config = {"from_attributes": True}
+
+class GameInterviewData(BaseModel):
+    total_interviews: int = 0
+    completed_interviews: int = 0
+    average_score: Optional[float] = None
+    total_tasks_completed: int = 0
+    total_points: int = 0
+    level: int = 1
+
+    model_config = {"from_attributes": True}

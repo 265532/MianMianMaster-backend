@@ -69,10 +69,14 @@ def revoke_refresh_token(user_id: int) -> None:
     redis_client.delete(redis_key)
 
 def is_refresh_token_valid(user_id: int, jti: str) -> bool:
-    redis_client = get_redis()
-    redis_key = f"refresh_token:user:{user_id}"
-    stored_jti = redis_client.get(redis_key)
-    return stored_jti == jti
+    try:
+        redis_client = get_redis()
+        redis_key = f"refresh_token:user:{user_id}"
+        stored_jti = redis_client.get(redis_key)
+        return stored_jti == jti
+    except Exception:
+        # Redis 不可用时，允许 refresh token 验证通过
+        return True
 
 def add_token_to_blacklist(jti: str, expires_in_seconds: int) -> None:
     redis_client = get_redis()
@@ -81,9 +85,13 @@ def add_token_to_blacklist(jti: str, expires_in_seconds: int) -> None:
         redis_client.setex(redis_key, expires_in_seconds, "1")
 
 def is_token_blacklisted(jti: str) -> bool:
-    redis_client = get_redis()
-    redis_key = f"token:blacklist:{jti}"
-    return redis_client.exists(redis_key) > 0
+    try:
+        redis_client = get_redis()
+        redis_key = f"token:blacklist:{jti}"
+        return redis_client.exists(redis_key) > 0
+    except Exception:
+        # Redis 不可用时，假定 token 未被黑名单
+        return False
 
 def create_password_reset_token(email: str) -> str:
     expire = datetime.now(timezone.utc) + timedelta(minutes=15)
@@ -107,6 +115,10 @@ def mark_reset_token_used(jti: str) -> None:
     redis_client.setex(redis_key, 900, "1")
 
 def is_reset_token_used(jti: str) -> bool:
-    redis_client = get_redis()
-    redis_key = f"pwd_reset:used:{jti}"
-    return redis_client.exists(redis_key) > 0
+    try:
+        redis_client = get_redis()
+        redis_key = f"pwd_reset:used:{jti}"
+        return redis_client.exists(redis_key) > 0
+    except Exception:
+        # Redis 不可用时，假定 token 未被使用
+        return False
